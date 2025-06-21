@@ -1,0 +1,7 @@
+// Renderhint
+renderhint NormalAndSpecMapped
+
+// Textures
+texture0 txvd_F1Tile1c
+texture1 txvd_F1Tile1c_n
+texture2 txvd_F1Tile1c_s

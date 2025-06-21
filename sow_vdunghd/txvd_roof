@@ -1,0 +1,9 @@
+ 
+renderhint NormalAndSpecMapped 
+ 
+// Textures 
+texture0 txvd_roof 
+texture1 txvd_roof_n 
+texture2 txvd_roof_s 
+texture3 null 
+texture4 null 
