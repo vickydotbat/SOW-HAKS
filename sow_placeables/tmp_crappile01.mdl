@@ -1,0 +1,788 @@
+#MAXMODEL ASCII
+# model: dag_dirtpile
+filedependancy dag_dirtpile.max
+newmodel dag_dirtpile
+setsupermodel dag_dirtpile NULL
+classification CHARACTER
+setanimationscale 1
+#MAXGEOM  ASCII
+beginmodelgeom dag_dirtpile
+node dummy dag_dirtpile
+  parent NULL
+endnode
+node dummy dirtpile_impact
+  parent dag_dirtpile
+  position 0 0 0.17
+  orientation 0 0 0 0
+endnode
+node dummy dirtpile_hand
+  parent dag_dirtpile
+  position 0 0 0.2
+  orientation 0 0 0 0
+endnode
+node dummy dirtpile_head_hit
+  parent dag_dirtpile
+  position 0 0.02 0.38
+  orientation 0 0 0 0
+endnode
+node dummy dirtpile_ground
+  parent dag_dirtpile
+  position 0 0 0.03
+  orientation 0 0 0 0
+endnode
+node dummy dirtpile_head
+  parent dag_dirtpile
+  position 0 0 0.21
+  orientation 0 0 0 0
+endnode
+node trimesh damage_dirtpile
+  parent dag_dirtpile
+  ambient 0.0705882 0 1
+  diffuse 1 0.501961 0.643137
+  specular 0 0.9 0.105882
+  shininess 10
+  shadow 0
+  render 0
+  bitmap NULL
+  verts 12
+      -0.1900000   -0.1900000    0.0000000
+      -0.1900000    0.1800000    0.0000000
+       0.2000000    0.1800000    0.0000000
+       0.2000000   -0.1900000    0.0000000
+      -0.1900000   -0.1900000    0.5000000
+       0.2000000   -0.1900000    0.5000000
+       0.2000000    0.1800000    0.5000000
+      -0.1900000    0.1800000    0.5000000
+       0.1100000   -0.1000000    0.2500000
+      -0.1000000   -0.1000000    0.2500000
+       0.1100000    0.1000000    0.2500000
+      -0.1000000    0.1000000    0.2500000
+  faces 20
+     0  1  2  1        0       0       0   2
+     2  3  0  1        0       0       0   2
+     4  5  6  1        0       0       0   1
+     6  7  4  1        0       0       0   1
+     0  3  8  2        0       0       0   5
+     8  9  0  2        0       0       0   5
+     9  8  5  2        0       0       0   5
+     5  4  9  2        0       0       0   5
+     3  2 10  4        0       0       0   4
+    10  8  3  4        0       0       0   4
+     8 10  6  4        0       0       0   4
+     6  5  8  4        0       0       0   4
+     2  1 11  2        0       0       0   6
+    11 10  2  2        0       0       0   6
+    10 11  7  2        0       0       0   6
+     7  6 10  2        0       0       0   6
+     1  0  9  4        0       0       0   3
+     9 11  1  4        0       0       0   3
+    11  9  4  4        0       0       0   3
+     4  7 11  4        0       0       0   3
+  position -0.03 0 0
+  orientation 0 0 0 0
+  scale 1
+  alpha 1
+  selfillumcolor 0 0 0
+endnode
+node trimesh dirtpile
+  parent damage_dirtpile
+  ambient 0.588 0.588 0.588 
+  diffuse 0.588 0.588 0.588 
+  specular 0.0 0.0 0.0 
+  shininess 10.0
+  bitmap tmp_craplarge
+  verts 66
+      -0.4300000    2.1800001    0.0200000
+      -1.0200000    1.8600000    0.0200000
+      -0.7200000    1.5800000    0.0200000
+      -0.6400000    2.6600001    0.0200000
+       0.8600000    2.1900001    0.0200000
+       0.6300000    1.8500000    0.0200000
+       1.3200001    1.5900000    0.0200000
+       1.0000000    1.3700000    0.0200000
+       1.7600000    0.9100000    0.0200000
+       1.4000000    0.7500000    0.0200000
+       1.6300000   -0.0500000    0.0200000
+       2.0400000   -0.0700000    0.0200000
+       1.3600000   -0.7800000    0.0200000
+       1.7300000   -0.9200000    0.0200000
+       1.1200000   -1.4299999    0.0200000
+       1.4600000   -1.6400000    0.0200000
+       0.6500000   -1.9100000    0.0200000
+       0.8700000   -2.2400000    0.0200000
+       0.0500000   -2.1300001    0.0200000
+       0.1000000   -2.5200000    0.0200000
+      -0.8100000   -2.4200001    0.0200000
+      -0.6400000   -2.0500000    0.0200000
+      -1.6300000   -1.6600000    0.0200000
+      -1.2700000   -1.4500000    0.0200000
+      -1.8500000   -0.7400000    0.0200000
+      -1.4500000   -0.7100000    0.0200000
+      -1.7700000    0.0300000    0.0200000
+      -1.3800000    0.0500000    0.0200000
+      -1.9100000    0.7400000    0.0200000
+      -1.5000000    0.6600000    0.0200000
+      -1.0200000    1.4000000    0.0200000
+      -1.3000000    1.6900001    0.0200000
+       0.9200000    0.5300000    0.4800000
+       0.9600000   -0.0100000    0.3000000
+       0.8700000   -0.6000000    0.5100000
+       0.6700000   -1.1400000    0.3600000
+       0.3600000   -1.4600000    0.2900000
+      -0.0100000   -1.6000000    0.3900000
+      -0.4100000   -1.5500000    0.4200000
+      -0.8100000   -1.1799999    0.4100000
+      -0.9300000   -0.6700000    0.3400000
+      -0.8200000    0.0800000    0.3100000
+      -0.9500000    0.5500000    0.3500000
+      -0.6500000    1.0200000    0.3700000
+      -0.3200000    1.2200000    0.4600000
+      -0.1600000    1.5500000    0.3800000
+       0.3200000    1.4000000    0.4200000
+       0.5800000    1.0700001    0.3300000
+       0.0300000    1.0100000    0.5900000
+       0.2600000    0.8400000    0.5900000
+       0.5700000    0.3700000    0.5900000
+       0.5700000   -0.0200000    0.4700000
+       0.5200000   -0.4600000    0.5900000
+       0.3400000   -0.9300000    0.5900000
+       0.1500000   -1.1200000    0.5900000
+      -0.0600000   -1.2000000    0.5900000
+      -0.2400000   -1.1799999    0.5900000
+      -0.4600000   -0.9700000    0.5900000
+      -0.5400000   -0.6400000    0.5900000
+      -0.4300000    0.1000000    0.4900000
+      -0.5500000    0.4700000    0.5900000
+      -0.3800000    0.7300000    0.5900000
+       0.0000000   -0.5500000    0.8000000
+       0.0000000   -0.9300000    0.7000000
+       0.0000000    0.0500000    0.6600000
+       0.0300000    0.3900000    0.7800000
+  tverts 66
+       0.4277340    0.8828130  0
+       0.1738280    0.9082030  0
+       0.3007810    0.7910160  0
+       0.3789060    0.9843750  0
+       0.7207030    0.9550780  0
+       0.6660160    0.8691410  0
+       0.9121090    0.8125000  0
+       0.8105470    0.7832030  0
+       0.9550780    0.6367190  0
+       0.8574220    0.6171880  0
+       0.8906250    0.4628910  0
+       1.0039099    0.4472660  0
+       0.8867190    0.3183590  0
+       0.9746090    0.2617190  0
+       0.8183590    0.1835940  0
+       0.9160160    0.1269530  0
+       0.6816410    0.1074220  0
+       0.7402340    0.0292969  0
+       0.5117190    0.0839844  0
+       0.5234380    0.0097656  0
+       0.3144530    0.0195313  0
+       0.3691410    0.1210940  0
+       0.1074220    0.1425780  0
+       0.1933590    0.2031250  0
+       0.0429688    0.3242190  0
+       0.1406250    0.3281250  0
+       0.0371094    0.4628910  0
+       0.1289060    0.4687500  0
+       0.0273438    0.5996090  0
+       0.1250000    0.5800780  0
+       0.2324220    0.7343750  0
+       0.1054690    0.8300780  0
+       0.7402340    0.6132810  0
+       0.7792970    0.4980470  0
+       0.7500000    0.3671880  0
+       0.6953130    0.2519530  0
+       0.6035160    0.1992190  0
+       0.5058590    0.2031250  0
+       0.4179690    0.2226560  0
+       0.2910160    0.2890630  0
+       0.2519530    0.3574220  0
+       0.2363280    0.4921880  0
+       0.2421880    0.5898440  0
+       0.3203130    0.6855470  0
+       0.3828130    0.7343750  0
+       0.4472660    0.7910160  0
+       0.5683590    0.7773440  0
+       0.6718750    0.7285160  0
+       0.5156250    0.7148440  0
+       0.5937500    0.6894530  0
+       0.6582030    0.5937500  0
+       0.6894530    0.5195310  0
+       0.6621090    0.4101560  0
+       0.5976560    0.3457030  0
+       0.5449220    0.3085940  0
+       0.4902340    0.2949220  0
+       0.4414060    0.2988280  0
+       0.3828130    0.3378910  0
+       0.3613280    0.4003910  0
+       0.3398440    0.5371090  0
+       0.3593750    0.6152340  0
+       0.4062500    0.6640630  0
+       0.5058590    0.4179690  0
+       0.5058590    0.3417970  0
+       0.5058590    0.5332030  0
+       0.5136720    0.5976560  0
+  faces 114
+     0  1  2  1   0  1  2   1
+     0  3  1  1   0  3  1   1
+     4  0  5  1   4  0  5   1
+     4  3  0  1   4  3  0   1
+     6  5  7  1   6  5  7   1
+     6  4  5  1   6  4  5   1
+     8  7  9  1   8  7  9   1
+     8  6  7  1   8  6  7   1
+     8 10 11  1   8 10 11   1
+     8  9 10  1   8  9 10   1
+    11 12 13  1  11 12 13   1
+    11 10 12  1  11 10 12   1
+    13 14 15  1  13 14 15   1
+    13 12 14  1  13 12 14   1
+    15 16 17  1  15 16 17   1
+    15 14 16  1  15 14 16   1
+    17 18 19  1  17 18 19   1
+    17 16 18  1  17 16 18   1
+    18 20 19  1  18 20 19   1
+    18 21 20  1  18 21 20   1
+    21 22 20  1  21 22 20   1
+    21 23 22  1  21 23 22   1
+    23 24 22  1  23 24 22   1
+    23 25 24  1  23 25 24   1
+    25 26 24  1  25 26 24   1
+    25 27 26  1  25 27 26   1
+    27 28 26  1  27 28 26   1
+    27 29 28  1  27 29 28   1
+    30 28 29  1  30 28 29   1
+    30 31 28  1  30 31 28   1
+     2 31 30  1   2 31 30   1
+     2  1 31  1   2  1 31   1
+    10 32 33  1  10 32 33   1
+    10  9 32  1  10  9 32   1
+    12 33 34  1  12 33 34   1
+    12 10 33  1  12 10 33   1
+    14 34 35  1  14 34 35   1
+    14 12 34  1  14 12 34   1
+    16 35 36  1  16 35 36   1
+    16 14 35  1  16 14 35   1
+    18 36 37  1  18 36 37   1
+    18 16 36  1  18 16 36   1
+    38 18 37  1  38 18 37   1
+    38 21 18  1  38 21 18   1
+    39 21 38  1  39 21 38   1
+    39 23 21  1  39 23 21   1
+    40 23 39  1  40 23 39   1
+    40 25 23  1  40 25 23   1
+    41 25 40  1  41 25 40   1
+    41 27 25  1  41 27 25   1
+    42 27 41  1  42 27 41   1
+    42 29 27  1  42 29 27   1
+    43 29 42  1  43 29 42   1
+    43 30 29  1  43 30 29   1
+    44 30 43  1  44 30 43   1
+    44  2 30  1  44  2 30   1
+    45  2 44  1  45  2 44   1
+    45  0  2  1  45  0  2   1
+     5 45 46  1   5 45 46   1
+     5  0 45  1   5  0 45   1
+     7 46 47  1   7 46 47   1
+     7  5 46  1   7  5 46   1
+     9 47 32  1   9 47 32   1
+     9  7 47  1   9  7 47   1
+    45 48 46  1  45 48 46   1
+    45 44 48  1  45 44 48   1
+    47 48 49  1  47 48 49   1
+    47 46 48  1  47 46 48   1
+    32 49 50  1  32 49 50   1
+    32 47 49  1  32 47 49   1
+    33 50 51  1  33 50 51   1
+    33 32 50  1  33 32 50   1
+    34 51 52  1  34 51 52   1
+    34 33 51  1  34 33 51   1
+    35 52 53  1  35 52 53   1
+    35 34 52  1  35 34 52   1
+    36 53 54  1  36 53 54   1
+    36 35 53  1  36 35 53   1
+    37 54 55  1  37 54 55   1
+    37 36 54  1  37 36 54   1
+    56 37 55  1  56 37 55   1
+    56 38 37  1  56 38 37   1
+    57 38 56  1  57 38 56   1
+    57 39 38  1  57 39 38   1
+    58 39 57  1  58 39 57   1
+    58 40 39  1  58 40 39   1
+    59 40 58  1  59 40 58   1
+    59 41 40  1  59 41 40   1
+    60 41 59  1  60 41 59   1
+    60 42 41  1  60 42 41   1
+    61 42 60  1  61 42 60   1
+    61 43 42  1  61 43 42   1
+    48 43 61  1  48 43 61   1
+    48 44 43  1  48 44 43   1
+    62 53 52  1  62 53 52   1
+    62 63 53  1  62 63 53   1
+    58 63 62  1  58 63 62   1
+    58 57 63  1  58 57 63   1
+    56 63 57  1  56 63 57   1
+    54 63 55  1  54 63 55   1
+    59 62 64  1  59 62 64   1
+    59 58 62  1  59 58 62   1
+    62 51 64  1  62 51 64   1
+    62 52 51  1  62 52 51   1
+    60 64 65  1  60 64 65   1
+    60 59 64  1  60 59 64   1
+    64 50 65  1  64 50 65   1
+    64 51 50  1  64 51 50   1
+    65 61 60  1  65 61 60   1
+    65 49 48  1  65 49 48   1
+    65 50 49  1  65 50 49   1
+    65 48 61  1  65 48 61   1
+    56 55 63  1  56 55 63   1
+    54 53 63  1  54 53 63   1
+  position 0.03 0 0
+  orientation 0 0 0 0
+endnode
+node emitter chunkywood182
+  parent dag_dirtpile
+  p2p 0
+  p2p_sel 1
+  affectedByWind 0
+  m_isTinted 0
+  bounce 1
+  random 0
+  inherit 1
+  inheritvel 0
+  inherit_local 0
+  inherit_part 0
+  splat 0
+  renderorder 0
+  spawntype 0
+  update Explosion
+  render Normal
+  blend Normal
+  texture fxpa_cloud02
+  chunkName plc_chunk_w02
+  xgrid 5
+  ygrid 5
+  loop 0
+  deadspace 0
+  twosidedtex 0
+  blastRadius 0
+  blastLength 0
+  position 0.03 0.03 0.51
+  orientation 0 0 0 0
+  xsize 89
+  ysize 40
+  threshold 0
+  combinetime 0
+  colorStart 1 1 1
+  colorEnd 1 1 1
+  alphaStart 1
+  alphaEnd 1
+  sizeStart 0.1
+  sizeEnd 0.1
+  sizeStart_y 0
+  sizeEnd_y 0
+  birthrate 1
+  lifeExp 0.75
+  mass 3
+  spread 1.22173
+  particleRot 5
+  velocity 8
+  randvel 0.3
+  bounce_co 0.5
+  blurlength 10
+  fps 0
+  frameStart 0
+  frameEnd 24
+  lightningDelay 0
+  lightningRadius 0
+  lightningScale 0
+  p2p_bezier2 0
+  p2p_bezier3 0
+  grav 0
+  drag 0
+endnode
+node emitter chunkywood183
+  parent dag_dirtpile
+  p2p 0
+  p2p_sel 1
+  affectedByWind 0
+  m_isTinted 0
+  bounce 1
+  random 0
+  inherit 1
+  inheritvel 0
+  inherit_local 0
+  inherit_part 0
+  splat 0
+  renderorder 0
+  spawntype 0
+  update Explosion
+  render Normal
+  blend Normal
+  texture fxpa_cloud02
+  chunkName plc_chunk_w01
+  xgrid 5
+  ygrid 5
+  loop 0
+  deadspace 0
+  twosidedtex 1
+  blastRadius 0
+  blastLength 0
+  position 0.03 0.03 0.62
+  orientation 0 0 0 0
+  xsize 89
+  ysize 40
+  threshold 0
+  combinetime 0
+  colorStart 0.482353 0.435294 0.317647
+  colorEnd 0.584314 0.533333 0.407843
+  alphaStart 1
+  alphaEnd 1
+  sizeStart 0.1
+  sizeEnd 0.1
+  sizeStart_y 0
+  sizeEnd_y 0
+  birthrate 2
+  lifeExp 0.75
+  mass 3
+  spread 1.22173
+  particleRot 2.9
+  velocity 8
+  randvel 0.3
+  bounce_co 0.5
+  blurlength 10
+  fps 0
+  frameStart 0
+  frameEnd 24
+  lightningDelay 0
+  lightningRadius 0
+  lightningScale 0
+  p2p_bezier2 0
+  p2p_bezier3 0
+  grav 0
+  drag 0
+endnode
+node emitter fire!69
+  parent dag_dirtpile
+  p2p 0
+  p2p_sel 1
+  affectedByWind 0
+  m_isTinted 1
+  bounce 0
+  random 0
+  inherit 1
+  inheritvel 0
+  inherit_local 0
+  inherit_part 0
+  splat 0
+  renderorder 0
+  spawntype 0
+  update Explosion
+  render Normal
+  blend Normal
+  texture fxpa_smoke01
+  xgrid 4
+  ygrid 4
+  loop 0
+  deadspace 0
+  twosidedtex 1
+  blastRadius 0.2
+  blastLength 1
+  position 0 -0.05 0.53
+  orientation 1 0 0 -4.71239
+  xsize 100
+  ysize 99
+  threshold 0
+  combinetime 0
+  colorStart 0.47451 0.431373 0.329412
+  colorEnd 0.819608 0.772549 0.584314
+  alphaStart 1
+  alphaEnd 0
+  sizeStart 4
+  sizeEnd 1
+  sizeStart_y 0
+  sizeEnd_y 0
+  birthrate 10
+  lifeExp 2.5
+  mass 0.09
+  spread 2.96706
+  particleRot 0.5
+  velocity 2
+  randvel 0.5
+  bounce_co 0
+  blurlength 10
+  fps 10
+  frameStart 0
+  frameEnd 24
+  lightningDelay 0
+  lightningRadius 0
+  lightningScale 0
+  p2p_bezier2 0
+  p2p_bezier3 0
+  grav 0
+  drag 0
+endnode
+endmodelgeom dag_dirtpile
+
+#MAXANIM ASCII
+newanim damage dag_dirtpile
+  length 0.133333
+  transtime 0
+  animroot dag_dirtpile
+  node dummy dag_dirtpile
+    parent NULL
+  endnode
+  node dummy dirtpile_pwk
+    parent dag_dirtpile
+  endnode
+  node dummy nowalk01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use02
+    parent dirtpile_pwk
+  endnode
+  node dummy dirtpile_impact
+    parent dag_dirtpile
+    positionkey 2
+         0.0000000    0.0000000    0.0000000    0.1700000
+         0.1333330    0.0002184    0.0000000    0.1700000
+    orientation 0 0 0 0
+  endnode
+  node dummy dirtpile_hand
+    parent dag_dirtpile
+    positionkey 2
+         0.0000000    0.0000000    0.0000000    0.2000000
+         0.1333330    0.0002184    0.0000000    0.2000000
+    orientation 0 0 0 0
+  endnode
+  node dummy dirtpile_head_hit
+    parent dag_dirtpile
+    positionkey 2
+         0.0000000    0.0000000    0.0200000    0.3800000
+         0.1333330    0.0002184    0.0200000    0.3800000
+    orientation 0 0 0 0
+  endnode
+  node dummy dirtpile_ground
+    parent dag_dirtpile
+    positionkey 2
+         0.0000000    0.0000000    0.0000000    0.0300000
+         0.1333330    0.0002212    0.0000000    0.0300000
+    orientation 0 0 0 0
+  endnode
+  node dummy dirtpile_head
+    parent dag_dirtpile
+    positionkey 2
+         0.0000000    0.0000000    0.0000000    0.2100000
+         0.1333330    0.0002184    0.0000000    0.2100000
+    orientation 0 0 0 0
+  endnode
+  node trimesh damage_dirtpile
+    parent dag_dirtpile
+    ambient 0.2 0.2 0.2
+    diffuse 0.8 0.8 0.8
+    specular 0 0 0
+    shininess 1
+    positionkey 4
+         0.0000000   -0.0300000    0.0000000    0.0000000
+         0.0333333   -0.0300000    0.0000000    0.0244581
+         0.1000000   -0.0300000    0.0000000    0.0000000
+         0.1333330   -0.0300000    0.0000000    0.0000000
+    orientationkey 5
+         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
+         0.0333333    0.3713361   -0.9284632    0.0081026   -0.0469939
+         0.0666667   -0.5999500    0.7999690    0.0104722   -0.0436324
+         0.1000000    0.0000000    0.0000000    0.0000000    0.0000000
+         0.1333330    0.0000000    0.0000000    0.0000000    0.0000000
+  endnode
+  node dummy dirtpile
+    parent damage_dirtpile
+  endnode
+  node emitter chunkywood182
+    parent dag_dirtpile
+  endnode
+  node emitter chunkywood183
+    parent dag_dirtpile
+  endnode
+  node emitter fire!69
+    parent dag_dirtpile
+  endnode
+doneanim damage dag_dirtpile
+
+#MAXANIM ASCII
+newanim dead dag_dirtpile
+  length 0.0333333
+  transtime 0
+  animroot dag_dirtpile
+  node dummy dag_dirtpile
+    parent NULL
+  endnode
+  node dummy dirtpile_pwk
+    parent dag_dirtpile
+  endnode
+  node dummy nowalk01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use02
+    parent dirtpile_pwk
+  endnode
+  node dummy dirtpile_impact
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_hand
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head_hit
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_ground
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head
+    parent dag_dirtpile
+  endnode
+  node trimesh damage_dirtpile
+    parent dag_dirtpile
+    ambient 0.2 0.2 0.2
+    diffuse 0.8 0.8 0.8
+    specular 0 0 0
+    shininess 1
+    positionkey 2
+         0.0000000   -0.0300000    0.0000000   -3.7799900
+         0.0333333   -0.0300000    0.0000000   -3.7799900
+  endnode
+  node dummy dirtpile
+    parent damage_dirtpile
+  endnode
+  node emitter chunkywood182
+    parent dag_dirtpile
+  endnode
+  node emitter chunkywood183
+    parent dag_dirtpile
+  endnode
+  node emitter fire!69
+    parent dag_dirtpile
+  endnode
+doneanim dead dag_dirtpile
+
+#MAXANIM ASCII
+newanim default dag_dirtpile
+  length 0
+  transtime 0.25
+  animroot dag_dirtpile
+  node dummy dag_dirtpile
+    parent NULL
+  endnode
+  node dummy dirtpile_pwk
+    parent dag_dirtpile
+  endnode
+  node dummy nowalk01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use02
+    parent dirtpile_pwk
+  endnode
+  node dummy dirtpile_impact
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_hand
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head_hit
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_ground
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head
+    parent dag_dirtpile
+  endnode
+  node dummy damage_dirtpile
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile
+    parent damage_dirtpile
+  endnode
+  node emitter chunkywood182
+    parent dag_dirtpile
+  endnode
+  node emitter chunkywood183
+    parent dag_dirtpile
+  endnode
+  node emitter fire!69
+    parent dag_dirtpile
+  endnode
+doneanim default dag_dirtpile
+
+#MAXANIM ASCII
+newanim die dag_dirtpile
+  length 0.166667
+  transtime 0
+  animroot dag_dirtpile
+  event 0.0333333 detonate
+  node dummy dag_dirtpile
+    parent NULL
+  endnode
+  node dummy dirtpile_pwk
+    parent dag_dirtpile
+  endnode
+  node dummy nowalk01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use01
+    parent dirtpile_pwk
+  endnode
+  node dummy dpl_pwk_use02
+    parent dirtpile_pwk
+  endnode
+  node dummy dirtpile_impact
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_hand
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head_hit
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_ground
+    parent dag_dirtpile
+  endnode
+  node dummy dirtpile_head
+    parent dag_dirtpile
+  endnode
+  node trimesh damage_dirtpile
+    parent dag_dirtpile
+    ambient 0.2 0.2 0.2
+    diffuse 0.8 0.8 0.8
+    specular 0 0 0
+    shininess 1
+    positionkey 2
+         0.0000000   -0.0300000    0.0000000    0.0000000
+         0.1666670   -0.0300000    0.0000000   -3.7799900
+  endnode
+  node dummy dirtpile
+    parent damage_dirtpile
+  endnode
+  node emitter chunkywood182
+    parent dag_dirtpile
+  endnode
+  node emitter chunkywood183
+    parent dag_dirtpile
+  endnode
+  node emitter fire!69
+    parent dag_dirtpile
+  endnode
+doneanim die dag_dirtpile
+
+donemodel dag_dirtpile
