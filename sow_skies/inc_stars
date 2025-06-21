@@ -1,0 +1,140 @@
+//=============================================================================
+//
+// inc_stars.shd
+//
+// Author: Bhaal
+// Date: 24/06/2022
+// Version: 0.2
+// 
+//=============================================================================
+
+float rand2D(vec2 n){ 
+    return fract(sin(dot(n,vec2(12.9898,4.1414))) * 43758.5453);
+}
+
+float rand2D2(vec2 n){ 
+    return fract(sin(dot(n,vec2(12.9898,1.1414))) * 43758.5453);
+}
+
+float dotNoise2D(in float x, in float y, in float fractionalMaxDotSize, in float dDensity)
+{
+    float integer_x = x - fract(x);
+    float fractional_x = x - integer_x;
+
+    float integer_y = y - fract(y);
+    float fractional_y = y - integer_y;
+
+    if (rand2D(vec2(integer_x+1.0, integer_y +1.0)) > dDensity)
+       {return 0.0;}
+
+    float xoffset = (rand2D(vec2(integer_x, integer_y)) -0.5);
+    float yoffset = (rand2D(vec2(integer_x+1.0, integer_y)) - 0.5);
+    float dotSize = 0.4 * fractionalMaxDotSize * max(0.25,rand2D(vec2(integer_x, integer_y+1.0)));
+
+    vec2 truePos = vec2 (0.5 + xoffset * (1.0 - 2.0 * dotSize) , 0.5 + yoffset * (1.0 -2.0 * dotSize));
+
+    float distance = length(truePos - vec2(fractional_x, fractional_y));
+
+    return 1.0 - smoothstep (0.3 * dotSize, 1.0* dotSize, distance);
+}
+
+float dotNoise2D2(in float x2, in float y2, in float fractionalMaxDotSize2, in float dDensity2)
+{
+    float integer_x2 = x2 - fract(x2);
+    float fractional_x2 = x2 - integer_x2;
+
+    float integer_y2 = y2 - fract(y2);
+    float fractional_y2 = y2 - integer_y2;
+
+    if (rand2D2(vec2(integer_x2+1.0, integer_y2 +1.0)) > dDensity2)
+       {return 0.0;}
+
+    float xoffset2 = (rand2D2(vec2(integer_x2, integer_y2)) -0.9);
+    float yoffset2 = (rand2D2(vec2(integer_x2+1.0, integer_y2)) - 0.9);
+    float dotSize2 = 0.5 * fractionalMaxDotSize2 * max(0.25,rand2D2(vec2(integer_x2, integer_y2+1.0)));
+
+    vec2 truePos2 = vec2 (0.5 + xoffset2 * (1.0 - 2.0 * dotSize2) , 0.5 + yoffset2 * (1.0 -2.0 * dotSize2));
+
+    float distance2 = length(truePos2 - vec2(fractional_x2, fractional_y2));
+
+    return 1.0 - smoothstep (0.3 * dotSize2, 1.0* dotSize2, distance2);
+}
+
+float DotNoise2D(in vec2 coord, in float wavelength, in float fractionalMaxDotSize, in float dDensity)
+{
+    return dotNoise2D(coord.x/wavelength, coord.y/wavelength, fractionalMaxDotSize, dDensity);
+}
+
+
+float DotNoise2D2(in vec2 coord2, in float wavelength2, in float fractionalMaxDotSize2, in float dDensity2)
+{
+    return dotNoise2D2(coord2.x/wavelength2, coord2.y/wavelength2, fractionalMaxDotSize2, dDensity2);
+}
+
+void ApplyStarsShader(out vec4 fragColor)
+{
+
+    float time = float(worldtimerTimeOfDay)/1000.0;
+    vec3 col  = vec3(0.0, 0.0, 0.0);
+
+    // Time used for Dusk and Dawn transition
+    float fTimeScale = 20.0/float(moduleMinutesPerHour);
+    float fDDTransitionTime = clamp(fTimeScale*moduleTimeIntoTransition/1000.0, 0.0, 1.0);
+ 
+    // DARK BLUE SHADE AT 50 HORIZON LEVEL   
+    // render sky gradient for low z
+    col += vec3( 0.1, 0.2, 0.4 ) * 50.0/(vPosWorld.z+100.0); 
+    
+    vec2 coords = 200.0*vVertexTexCoords.xy;
+    vec2 coords2 = 200.0*vVertexTexCoords.xy;
+    vec2 coordsFog = coords;
+    
+    coords.x = coords.x*10.0;  // Don't know if it's due to the mesh or texture... but stars are not round if you don't do this
+    coords2.x = coords2.x*10.0;  // Don't know if it's due to the mesh or texture... but stars are not round if you don't do this    
+   
+    //vec2 vDisplacement = vec2(1.0, -0.5);
+    //coords +=0.4*time*vDisplacement;
+
+    float StarVal = DotNoise2D(coords, 1.0, 0.4, 0.003);
+    float StarVal2 = DotNoise2D2(coords2, 2.0, 0.5, 0.008);    
+
+    float brightNess = clamp(1.0*vPosWorld.z/50.0, 0.0, 1.0); //Lower the brighness for low z
+    float fFlickeringRate = 5.0;
+    float flickering = 1.0*(cos(fFlickeringRate*time+ coords.x+ coords.y)+1.0)+ 0.6;
+    float fFlickeringRate2 = 1.0;
+    float flickering2 = 1.0*(cos(fFlickeringRate2*time+ coords2.x+ coords2.y)+1.0)+ 0.6;
+
+    StarVal = StarVal*brightNess*flickering;
+    StarVal2 = StarVal2*brightNess*flickering2;    
+    
+    vec3 StarColor = vec3(StarVal); 
+    vec3 StarColor2 = vec3(StarVal2);     
+    
+    // Don't like white stars
+    float fRedish = 0.1*(cos(coords.x+ coords.y)+1.0) + 2.0;
+    StarColor.r = StarColor.r*fRedish;
+    StarColor = clamp(StarColor, 0.0, 0.6);
+    
+    // Don't like white stars
+    float fBlueish = 1.0*(cos(coords2.x+ coords2.y)+1.0) + 1.0;
+    StarColor2.b = StarColor2.b*fBlueish;
+    StarColor2 = clamp(StarColor2, 0.0, 1.6);    
+    
+    col += StarColor;
+    col += StarColor2;    
+
+    // "bluish" zones in the sky
+    coordsFog.x = coordsFog.x*3.0;
+
+      
+    vec3 vFogColor = vec3( 0.2, 0.0, 0.2 )*0.01;
+    col += NoiseSimplex2D(0.02*coordsFog)*vFogColor*vPosWorld.z/100.0; //50/(vPosWorld.z+100);
+
+    vec4 vColor = texture2D(texUnit0, vTexCoords.xy);
+
+    float fAlpha = vColor.w;
+    col = mix(col, vColor.xyz, fAlpha);
+    col = clamp(col, 0.0, 1.0);
+
+    fragColor = vec4(col, 1.0);
+}

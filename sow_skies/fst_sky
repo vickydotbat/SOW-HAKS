@@ -1,0 +1,57 @@
+//=============================================================================
+//
+// fst_sky.shd
+//
+// Author: Bhaal
+// Date: 25/06/2022
+// Version: 0.2
+// 
+//=============================================================================
+
+#define SHADER_TYPE 2
+
+#define LIGHTING 0
+#define FOG 0
+#define KEYHOLING 0
+
+#define NORMAL_MAP 0
+#define SPECULAR_MAP 0
+#define ROUGHNESS_MAP 0
+#define HEIGHT_MAP 0
+#define SELF_ILLUMINATION_MAP 0
+#define ENVIRONMENT_MAP 0
+#define POSITION_WORLD 1
+#define POSITION_VIEW 1
+
+#define CLOUDS 1
+#define STARS 1
+#define BORDERTEXTURE 1
+
+
+#include "inc_standard"
+#include "inc_clouds"
+#include "inc_stars"
+#include "inc_skyborder"
+
+uniform lowp vec4 globalColor;
+
+void main ()
+{
+    FragmentColor = globalColor;
+    SetupStandardShaderInputs();
+    ApplyStandardShader();
+
+    #if STARS == 1
+       ApplyStarsShader(FragmentColor);
+    #endif
+    
+    #if CLOUDS == 1
+        ApplyCloudsShader(FragmentColor);
+    #endif
+    
+    #if BORDERTEXTURE == 1
+         ApplySkyBorderShader(FragmentColor);
+    #endif
+
+    gl_FragColor = FragmentColor;
+}

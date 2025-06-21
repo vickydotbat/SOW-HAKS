@@ -1,0 +1,15 @@
+customshadervs vsvt_sky
+customshaderfs fst_sky
+
+// Textures
+// texture0 is the texture you see behind the clouds during night, if the star shader is enabled 
+// the alpha layer of the texture will be used as a mask, so you can, for example, show the moon 
+// during night 
+texture0 ds_fsky
+
+// texture1 is the texture that is drawn over the stars and clouds, useful for mountains for examples
+// The alpha channel of the texture is used by the shader to know where to draw stars and clouds.
+// if you don't want this, disable the skyborder shader in fst_sky or use a transparent texture like
+// ds_alpha0 texture:
+// texture1 ds_alpha0
+texture1 mountains

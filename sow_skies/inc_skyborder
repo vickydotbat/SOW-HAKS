@@ -1,0 +1,55 @@
+//=============================================================================
+//
+// inc_skytext.shd
+//
+// Author: Bhaal
+// Date: 25/06/2022
+// Version: 0.2
+// 
+//=============================================================================
+
+// Exposition of the texture during day (D) and night (N). The lower the value, the darker the texture.
+#define BORDER_TEXTURE_EXPOSITION_D  1.0
+#define BORDER_TEXTURE_EXPOSITION_N  0.1
+#define BORDER_TEXTURE_EXPOSITION_DR 0.3
+
+uniform sampler2D texUnit1;
+
+void ApplySkyBorderShader(inout vec4 fragColor)
+{
+    // Time used for Dusk and Dawn transition
+    float fTimeScale = 20.0/float(moduleMinutesPerHour);
+    float fDDTransitionTime = clamp(fTimeScale*moduleTimeIntoTransition/1000.0, 0.0, 1.0);
+
+    // Time used for cloud/clear transitions 
+    float fCCTransitionTime = clamp(float(areaWeatherDensity)/100.0, 0.0, 1.0);
+
+    //Now draw the input texture
+    float fExposition_d =  mix(BORDER_TEXTURE_EXPOSITION_D, BORDER_TEXTURE_EXPOSITION_DR, fCCTransitionTime);
+    float fExposition;
+
+    if((moduleHour < moduleDawnHour) || (moduleHour > moduleDuskHour))
+    {
+        fExposition = BORDER_TEXTURE_EXPOSITION_N;
+    }
+    else if(moduleHour == moduleDuskHour)
+    {
+        fExposition = mix(fExposition_d, BORDER_TEXTURE_EXPOSITION_N, fDDTransitionTime);
+    } 
+    else if(moduleHour == moduleDawnHour)
+    {
+        fExposition = mix(BORDER_TEXTURE_EXPOSITION_N, fExposition_d, fDDTransitionTime);
+    }
+    else
+    {
+        fExposition = fExposition_d;
+    }
+
+    vec4 vColor = texture2D(texUnit1, vTexCoords.xy);
+    vec4 vColorGrey = vec4(0.33*(vColor.x + vColor.y + vColor.y));
+    vColor.xyz = mix(vColorGrey.xyz, vColor.xyz, fExposition);
+    float fAlpha = vColor.w;
+
+    //if(fAlpha>0.0) fAlpha = 1.0;
+    fragColor.xyz = mix(fragColor.xyz, fExposition*vColor.xyz, fAlpha);
+}

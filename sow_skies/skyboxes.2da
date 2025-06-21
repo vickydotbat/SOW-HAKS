@@ -1,0 +1,21 @@
+2DA V2.0                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                              
+    LABEL           STRING_REF  CYCLICAL    DAWN        DAY         DUSK        NIGHT
+
+0   None            ****        ****        ****        ****        ****        ****
+1   Grass_Clear     ****        1           Skyda_001   Sky_001     Skyd_001    Skyn_001
+2   Grass_Storm	    ****        1           SSkyda_001  SSky_001    SSkyd_001   SSkyn_001
+3   Desert_Clear    ****        1           DSkyda_001  DSky_001    DSkyd_001   DSkyn_001
+4   Winter_Clear    ****        1           WSkyda_001  WSky_001    WSkyd_001   WSkyn_001
+5   ****    	    ****        0           ****        ****        ****        ****
+6   Black           ****        0           Skybl_001   Skybl_001   Skybl_001   Skybl_001
+7   Mountains       ****        1           CCS_01a     CCS_01b     CCS_01c     CCS_01d
+8   Hills_2         ****        1           CCS_02a     CCS_02b     CCS_02c     CCS_02d
+9   Hills_1         ****        1           Hillsw_001  Hills_001   Hillsk_001  Hillsn_001
+10  Wood_1          ****        1           Woodsw_001  Wood_001    Woodsk_001  Woodsn_001
+11  Plains_1        ****        1           Plainsw_001 Plains_001  Plainsk_001 Plainsn_001
+12  Plains_2        ****        1           Plainsw_002 Plains_002  Plainsk_002 Plainsn_002
+
+
+
+

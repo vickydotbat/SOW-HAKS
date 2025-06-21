@@ -1,0 +1,333 @@
+//=============================================================================
+//
+// inc_clouds.shd
+//
+// Author: Bhaal
+// Date: 27/05/2023
+// Version: 0.3
+// Original shader code https://www.shadertoy.com/view/4tdSWr
+// 
+//=============================================================================
+
+#define WEATHER_TYPE_CLEAR 0
+
+// SKY_COLOR_OPACITY: a 1.0 means you can't see the background texture
+#define SKY_COLOR_OPACITY_D  1.0  // During day you can't see the background texture
+#define SKY_COLOR_OPACITY_N  0.0  // During night you can see the background texture (stars, moon)
+
+// TEXT_COLOR_MIX_SCALE: affect how the mixing between clouds and sky is done, the lowest the value, the less visible are the clouds
+#define TEXT_COLOR_MIX_SCALE_D  0.9  // For the day
+#define TEXT_COLOR_MIX_SCALE_DW  0.7  // For the DAWN
+#define TEXT_COLOR_MIX_SCALE_DK  0.6  // For the DUSK
+#define TEXT_COLOR_MIX_SCALE_N  0.5  // For the night
+
+// CLOUD_DARK: the lower the value, the darker are the clouds
+#define CLOUD_DARK_DC 0.8  // For day and clear sky
+#define CLOUD_DARK_DR 0.1 // For day and rain
+#define CLOUD_DARK_NC 0.2  // For night and clear sky
+#define CLOUD_DARK_NR 0.07 // For night and rain
+
+// SKY_TINT defines how much the background sky (texture, or color...) affect the color of the clouds
+// The higher, the less they are affected
+#define SKY_TINT_DC 0.8   // For day and clear sky // 1.0
+#define SKY_TINT_DW 0.3   // For DAWN and clear sky
+#define SKY_TINT_DK 0.3   // For DUSK and clear sky 
+#define SKY_TINT_DR 0.2   // For day and rain
+#define SKY_TINT_NC 0.3   // For night and clear sky
+#define SKY_TINT_NR 0.0   // For night and rain
+
+// CLOUD_SCALE: the higher, the smaller are the clouds
+// Note: different values between C and R values = weird transitions
+#define CLOUD_SCALE_C 2.4 // Clear sky for both day and night
+#define CLOUD_SCALE_R 2.4 // Rain for both day and night
+
+// CLOUD_COVER: a high value = all the sky is covered by clouds
+#define CLOUD_COVER_C 0.03 // Clear sky for both day and night // 0.2
+#define CLOUD_COVER_R 2.0 // Rain for both day and night
+
+// CLOUD_ALPHA: a high value = more opacity for the clouds
+#define CLOUD_ALPHA_C 1.9 // Clear sky for both day and night 0.7
+#define CLOUD_ALPHA_R 0.0 // Rain for both day and night
+
+// GREEN STORMY LOOKING (0.36, 0.52, 0.50)
+// LIGHT BLUE WHITE LOOKING (0.73, 0.87, 0.93)
+// ORIGINAL BHAAL SKY (0.4, 0.7, 1.0)
+// SKY_COLOR1: the background color of the sky at high altitude
+#define SKY_COLOR1_C (vec3(0.60, 0.77, 0.83)) // Clear sky for both day and night 
+#define SKY_COLOR1_R (vec3(0.2, 0.4, 0.6)) // Rain for both day and night 0.2, 0.4, 0.6
+
+// LIGHT TAN  MIX 1 (0.94, 0.88, 0.72)
+// BLUE-WHITE MIX 1 (0.68, 0.79, 0.86)
+// BLUE-WHITE MIX 2 (0.70, 0.82, 0.87)
+// BLUE-WHITE MIX 3 (0.79, 0.87, 0.95)
+// BLUE-WHITE MIX 4 (0.70, 0.79, 0.87)
+// SKY_COLOR2: the background color of the sky at low altitude day or night
+#define SKY_COLOR2_C (vec3(0.79, 0.87, 0.95)) // Clear sky for both day and night
+#define SKY_COLOR2_R (vec3(0.2, 0.3, 0.6)) // Rain for both day and night
+
+// SKY_COLOR3: the background color of the sky at low altitude at DAWN
+#define SKY_COLOR3_C (vec3(1.8, 1.2, 0.9)) // Clear sky for both day and night
+#define SKY_COLOR3_R (vec3(0.2, 0.3, 0.6)) // Rain for both day and night
+
+// DARK PURPLE  (0.40, 0.33, 0.5)
+// LIGHT PURPLE (0.67, 0.55, 0.66)
+// PURPLE-WHITE (0.71, 0.67, 0.93)
+// PURPLE-DARK  (0.46, 0.26, 0.35)
+// SKY_COLOR4: the background color of the sky at low altitude at DUSK
+#define SKY_COLOR4_C (vec3(0.71, 0.67, 0.93)) // Clear sky for both day and night // 1.5, 1.0, 1.2 
+#define SKY_COLOR4_R (vec3(0.2, 0.3, 0.6)) // Rain for both day and night
+
+#define SKY_COLOR2_END_Z 70.0  // At which altitude the gradient between color2 and color1 ends 50.0 DAY/NIGHT
+#define SKY_COLOR3_END_Z 90.0  // At which altitude the gradient between color2 and color1 ends 50.0 DAWN
+#define SKY_COLOR4_END_Z 100.0 // At which altitude the gradient between color2 and color1 ends 50.0 DUSK
+
+// RESOLUTION: A high value means more clouds have more resolution and seems bigger 
+// Note: different values between C and R = weird transitions
+#define RESOLUTION_C 100.0 // Clear sky for both day and night 
+#define RESOLUTION_R 100.0 // Clear sky for both day and night
+
+#define CLOUD_LIGHT   0.5   // For all cases, a high value means clouds are more white // 0.1
+#define CLOUD_SPEED   0.006 // For all cases, a high value means clouds are moving faster
+
+#include "inc_random"
+
+uniform float moduleTimeIntoTransition;
+
+const mat2 clouds_m = mat2( 1.6,  1.2, -1.2,  1.6 );
+
+vec2 clouds_hash( vec2 p ) 
+{
+    p = vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)));
+    return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+}
+
+float clouds_noise( in vec2 p ) 
+{
+    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+    const float K2 = 0.211324865; // (3-sqrt(3))/6;
+    vec2 i = floor(p + (p.x+p.y)*K1);   
+    vec2 a = p - i + (i.x+i.y)*K2;
+    vec2 o = (a.x>a.y) ? vec2(1.0,0.0) : vec2(0.0,1.0); //vec2 of = 0.5 + 0.5*vec2(sign(a.x-a.y), sign(a.y-a.x));
+    vec2 b = a - o + K2;
+    vec2 c = a - 1.0 + 2.0*K2;
+    vec3 h = max(0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
+    vec3 n = h*h*h*h*vec3( dot(a,clouds_hash(i+0.0)), dot(b,clouds_hash(i+o)), dot(c,clouds_hash(i+1.0)));
+    return dot(n, vec3(70.0));  
+}
+
+float clouds_fbm(vec2 n) 
+{
+    float total = 0.0, amplitude = 0.1;
+    for (int i = 0; i < 7; i++) {
+        total += clouds_noise(n) * amplitude;
+        n = clouds_m * n;
+        amplitude *= 0.4;
+    }
+    return total;
+}
+
+void ApplyCloudsShader(inout vec4 fragColor) 
+{
+    // Custom 3D -> 2D mapping
+    vec2 coords = 20.0*vPosWorld.xy/(vPosWorld.z+100.0);
+
+    float clouddark, skytint, overallScale;
+    
+    // Time used for Dusk and Dawn transition
+    float fTimeScale = 20.0/float(moduleMinutesPerHour);
+    float fDDTransitionTime = clamp(fTimeScale*moduleTimeIntoTransition/1000.0, 0.0, 1.0);
+    
+    // Time used for cloud/clear transitions 
+    float fCCTransitionTime = clamp(float(areaWeatherDensity)/100.0, 0.0, 1.0);
+
+    float cloudcover = mix(CLOUD_COVER_C, CLOUD_COVER_R, fCCTransitionTime);
+    float cloudalpha = mix(CLOUD_ALPHA_C, CLOUD_ALPHA_R, fCCTransitionTime);
+    float cloudscale = mix(CLOUD_SCALE_C, CLOUD_SCALE_R, fCCTransitionTime);
+    
+    vec3 skycolor1 = mix(SKY_COLOR1_C, SKY_COLOR1_R, fCCTransitionTime); // DAY HIGH SKY
+    vec3 skycolor2 = mix(SKY_COLOR2_C, SKY_COLOR2_R, fCCTransitionTime); // DAY LOW HORIZON
+    vec3 skycolor3 = mix(SKY_COLOR3_C, SKY_COLOR3_R, fCCTransitionTime); // DAWN LOW HORIZON
+    vec3 skycolor4 = mix(SKY_COLOR4_C, SKY_COLOR4_R, fCCTransitionTime); // DUSK LOW HORIZON
+    
+    float speed = CLOUD_SPEED;
+    vec2 iResolution=mix(vec2(RESOLUTION_C), vec2(RESOLUTION_R), fCCTransitionTime);
+
+    
+    float clouddark_d = mix(CLOUD_DARK_DC, CLOUD_DARK_DR, fCCTransitionTime);
+    float clouddark_n = mix(CLOUD_DARK_NC, CLOUD_DARK_NR, fCCTransitionTime);
+    float skytint_d   = mix(SKY_TINT_DC, SKY_TINT_DR, fCCTransitionTime); // DAY
+    float skytint_dw  = mix(SKY_TINT_DW, SKY_TINT_DR, fCCTransitionTime); // DAWN
+    float skytint_dk  = mix(SKY_TINT_DK, SKY_TINT_NR, fCCTransitionTime); // DUSK
+    float skytint_n   = mix(SKY_TINT_NC, SKY_TINT_NR, fCCTransitionTime); // NIGHT
+    float coloropacity_d = SKY_COLOR_OPACITY_D;
+    float coloropacity_n = SKY_COLOR_OPACITY_N;
+    float overallScale_d = TEXT_COLOR_MIX_SCALE_D;   // DAY
+    float overallScale_dw = TEXT_COLOR_MIX_SCALE_DW; // DAWN
+    float overallScale_dk = TEXT_COLOR_MIX_SCALE_DK; // DUSK
+    float overallScale_n = TEXT_COLOR_MIX_SCALE_N;   // NIGHT
+
+    float coloropacity=0.0;
+    if(moduleHour<moduleDawnHour || moduleHour> moduleDuskHour)
+    {
+        clouddark    = clouddark_n;       // clouddark_n
+        skytint      = skytint_n;         // skytint_n
+        overallScale = overallScale_n;    // overallScale_n;
+        coloropacity   = coloropacity_n;  // coloropacity_n;
+    }
+    else if(moduleHour==moduleDuskHour) // DUSK
+    {
+        clouddark    = mix(clouddark_d, clouddark_n, fDDTransitionTime); 
+        skytint      = mix(skytint_d,   skytint_dk,   fDDTransitionTime);
+        overallScale = mix(overallScale_dk, overallScale_n, fDDTransitionTime);
+        coloropacity   = mix(coloropacity_d, coloropacity_n, fDDTransitionTime);
+    } 
+    else if(moduleHour==moduleDawnHour) // DAWN
+    {
+        clouddark = mix(clouddark_n, clouddark_d, fDDTransitionTime);  
+        skytint   = mix(skytint_n,   skytint_dw,   fDDTransitionTime); 
+        overallScale = mix(overallScale_n, overallScale_dw, fDDTransitionTime);
+        coloropacity = mix(coloropacity_n, coloropacity_d, fDDTransitionTime);
+        
+    }
+    else
+    {
+        clouddark    = clouddark_d;
+        skytint      = skytint_d;
+        overallScale = overallScale_d;
+        coloropacity   = coloropacity_d;
+    }
+
+    float iTime = float(worldtimerTimeOfDay)/1000.0;
+
+    // The following code is "more or less" a copy of https://www.shadertoy.com/view/4tdSWr
+    vec2 p = coords.xy/iResolution.xy;
+    vec2 uv = p*vec2(iResolution.x/iResolution.y,1.0);    
+    float time = iTime * speed;
+    float q = clouds_fbm(uv * cloudscale * 0.5);
+    
+    //ridged noise shape
+    float r = 0.0;
+    uv *= cloudscale;
+    uv -= q - time;
+    float weight = 0.8;
+    for (int i=0; i<8; i++){
+        r += abs(weight*clouds_noise( uv ));
+        uv = clouds_m*uv + time;
+        weight *= 0.7;
+    }
+    
+    //noise shape
+    float f = 0.0;
+    uv = p*vec2(iResolution.x/iResolution.y,1.0);
+    uv *= cloudscale;
+    uv -= q - time;
+    weight = 0.7;
+    for (int i=0; i<8; i++){
+        f += weight*clouds_noise( uv );
+        uv = clouds_m*uv + time;
+        weight *= 0.6;
+    }
+    
+    f *= r + f;
+    
+    //noise color
+    float c = 0.0;
+    time = iTime * speed * 2.0;
+    uv = p*vec2(iResolution.x/iResolution.y,1.0);
+    uv *= cloudscale*2.0;
+    uv -= q - time;
+    weight = 0.4;
+    for (int i=0; i<7; i++){
+        c += weight*clouds_noise( uv );
+        uv = clouds_m*uv + time;
+        weight *= 0.6;
+    }
+    
+    //noise ridge color
+    float c1 = 0.0;
+    time = iTime * speed * 3.0;
+    uv = p*vec2(iResolution.x/iResolution.y,1.0);
+    uv *= cloudscale*3.0;
+    uv -= q - time;
+    weight = 0.4;
+    for (int i=0; i<7; i++){
+        c1 += abs(weight*clouds_noise( uv ));
+        uv = clouds_m*uv + time;
+        weight *= 0.6;
+    }
+    
+    c += c1;
+
+   if(moduleHour<moduleDawnHour || moduleHour> moduleDuskHour)
+   // NIGHT
+    {    
+    vec3 skycolor = mix(skycolor2, skycolor1, clamp(vPosWorld.z/SKY_COLOR2_END_Z, 0.0, 1.0));
+  
+    skycolor = mix(fragColor.xyz, skycolor, coloropacity);
+    
+    // DARK GREY CLOUDS (0.40, 0.37, 0.35) 
+     
+    vec3 cloudcolor = vec3(0.19, 0.25, 0.29) * clamp((clouddark + CLOUD_LIGHT*c), 0.0, 1.0);
+   
+    f = cloudcover + cloudalpha*f*r;
+    
+    vec3 result = mix(skycolor, clamp(skytint * skycolor + cloudcolor, 0.0, 1.0), clamp(overallScale*(f + c), 0.0, 1.0));
+    
+    fragColor = vec4( result, 1.0 );
+    }
+        
+    else if (moduleHour==moduleDawnHour)
+    {
+    vec3 skycolor = mix(skycolor3, skycolor1, clamp(vPosWorld.z/SKY_COLOR3_END_Z, 0.0, 1.0));
+  
+    skycolor = mix(fragColor.xyz, skycolor, coloropacity);
+    
+    // MORNING LIGHT ORANGE CLOUDS (0.61, 0.51, 0.47)
+    // PURPLE-DARK CLOUDS          (0.46, 0.26, 0.35)
+    // PURPLE-DARKER CLOUDS        (0.30, 0.18, 0.24)
+    // DEFAULT CLOUDS              (0.40, 0.37, 0.35)
+    
+    vec3 cloudcolor = vec3(0.29, 0.20, 0.12) * clamp((clouddark + CLOUD_LIGHT*c), 0.0, 1.0); // 1.1, 1.1, 0.9
+   
+    f = cloudcover + cloudalpha*f*r;
+    
+    vec3 result = mix(skycolor, clamp(skytint * skycolor + cloudcolor, 0.0, 1.0), clamp(overallScale*(f + c), 0.0, 1.0));
+    
+    fragColor = vec4( result, 1.0 );
+    
+    }
+    else if (moduleHour==moduleDuskHour)
+    {
+    vec3 skycolor = mix(skycolor4, skycolor1, clamp(vPosWorld.z/SKY_COLOR4_END_Z, 0.0, 1.0));
+  
+    skycolor = mix(fragColor.xyz, skycolor, coloropacity);
+    
+    // (0.08, 0.04, 0.02) SUBTEL
+    // (0.20, 0.14, 0.10) DARK ORANGE CLOUDS
+    // (0.51, 0.30, 0.24) LIGHT ORANGE CLOUDS
+    // (0.19, 0.25, 0.29) GREY CLOUDS
+    
+    vec3 cloudcolor = vec3(0.42, 0.33, 0.26) * clamp((clouddark + CLOUD_LIGHT*c), 0.0, 1.0); // 1.1, 1.1, 0.9 | 1.8, 1.2, 0.9  | 0.9, 0.7, 1.1
+    
+    f = cloudcover + cloudalpha*f*r;
+    
+    vec3 result = mix(skycolor, clamp(skytint * skycolor + cloudcolor, 0.0, 1.0), clamp(overallScale*(f + c), 0.0, 1.0));
+    
+    fragColor = vec4( result, 1.0 );
+    }
+    else
+    {
+    // DAY
+    vec3 skycolor = mix(skycolor2, skycolor1, clamp(vPosWorld.z/SKY_COLOR2_END_Z, 0.0, 1.0));
+  
+    skycolor = mix(fragColor.xyz, skycolor, coloropacity);
+    
+    vec3 cloudcolor = vec3(1.08, 1.05, 1.05) * clamp((clouddark + CLOUD_LIGHT*c), 0.0, 1.0);
+   
+    f = cloudcover + cloudalpha*f*r;
+    
+    vec3 result = mix(skycolor, clamp(skytint * skycolor + cloudcolor, 0.0, 1.0), clamp(overallScale*(f + c), 0.0, 1.0));
+    
+    fragColor = vec4( result, 1.0 );
+    }
+}

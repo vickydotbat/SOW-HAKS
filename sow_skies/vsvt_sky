@@ -1,0 +1,24 @@
+//=============================================================================
+//
+// vsvt_sky.shd
+// Author: Bhaal
+// Date: 25/06/2022
+// Version: 0.2
+//
+//=============================================================================
+
+#define SHADER_TYPE 1
+
+#define LIGHTING 0
+#define FOG 0
+#define KEYHOLING 0
+
+#define NORMAL_MAP 0
+#define ENVIRONMENT_MAP 0
+#define POSITION_WORLD 1
+#include "inc_standard"
+
+void main ()
+{
+	ApplyStandardShader();
+}
